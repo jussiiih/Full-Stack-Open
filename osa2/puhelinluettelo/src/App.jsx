@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import PersonsList from './components/PersonsList'
 import personService from './services/persons'
 
 const App = () => {
@@ -42,6 +43,14 @@ const App = () => {
     })}})
   } 
 
+  const removePerson = (personToBeRemoved) => {
+    personService.remove(personToBeRemoved)
+    .then(() => {
+      setPersons(persons.filter(person => person.id !== personToBeRemoved.id))
+    }
+  )
+  }
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -61,17 +70,17 @@ const App = () => {
     ? persons
     : persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
 
+
+
+
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter newFilter = {newFilter} onChange={handleFilterChange}/>
-      <PersonForm addName ={addName} newName = {newName} newNumber = {newNumber} handleNameChange ={handleNameChange} handleNumberChange ={handleNumberChange}/>
-      <h2>Numbers</h2>
-      <ul style ={{listStyleType: 'none', padding: 0 }}>
-        {personsToShow.map(person =>
-        <li key={person.name}>{person.name} {person.number}</li>
-        )}
-      </ul>
+        <Filter newFilter = {newFilter} onChange={handleFilterChange}/>
+        <PersonForm addName ={addName} newName = {newName} newNumber = {newNumber} handleNameChange ={handleNameChange} handleNumberChange ={handleNumberChange}/>
+      
+      <h3>Numbers</h3>
+        <PersonsList personsToShow={personsToShow} removePerson={removePerson}/>
     </div>
       
   )
