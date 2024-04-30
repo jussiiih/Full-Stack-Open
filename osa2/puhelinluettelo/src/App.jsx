@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonsList from './components/PersonsList'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -38,8 +40,16 @@ const App = () => {
                 .then(() => {
                     setPersons(prevPersons => prevPersons.map(person =>
                         person.id === existingPerson.id ? updatedPerson : person
-                    ));
-                })
+                      )
+                    )
+                    setMessage (
+                      `${updatedPerson.name} number changed.`
+                    )
+                    setTimeout(() => {
+                      setMessage(null)
+                    }, 5000)
+                }
+              )
 
         }}
         else {
@@ -49,6 +59,14 @@ const App = () => {
             setPersons(persons.concat(person))
             setNewName('')
             setNewNumber('')
+
+            setMessage (
+              `${person.name} added to the phonebook.`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+
         })}})
       } 
 
@@ -56,6 +74,12 @@ const App = () => {
     personService.remove(personToBeRemoved)
     .then(() => {
       setPersons(persons.filter(person => person.id !== personToBeRemoved.id))
+      setMessage (
+        `${personToBeRemoved.name} deleted from the phonebook.`
+      )
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   )
   }
@@ -64,7 +88,7 @@ const App = () => {
     setNewName(event.target.value)
   }
 
-  const handleNumberChange = (event) => {
+  const handleNumberChange = (event) => {3
     setNewNumber(event.target.value)
   }
 
@@ -85,6 +109,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <Notification message={message}/>
         <Filter newFilter = {newFilter} onChange={handleFilterChange}/>
         <PersonForm addName ={addName} newName = {newName} newNumber = {newNumber} handleNameChange ={handleNameChange} handleNumberChange ={handleNumberChange}/>
       
