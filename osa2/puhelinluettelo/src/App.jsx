@@ -4,6 +4,7 @@ import PersonForm from './components/PersonForm'
 import PersonsList from './components/PersonsList'
 import personService from './services/persons'
 import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,6 +13,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -43,13 +45,19 @@ const App = () => {
                       )
                     )
                     setMessage (
-                      `${updatedPerson.name} number changed.`
+                      `${updatedPerson.name}'s number changed.`
                     )
                     setTimeout(() => {
                       setMessage(null)
                     }, 5000)
                 }
-              )
+                )
+                .catch(error => {
+                  setErrorMessage(`${updatedPerson.name} has already been removed from the server`)
+                  setTimeout(() => {
+                    setErrorMessage(null)
+                  }, 5000)
+                })
 
         }}
         else {
@@ -70,6 +78,7 @@ const App = () => {
         })}})
       } 
 
+
   const removePerson = (personToBeRemoved) => {
     personService.remove(personToBeRemoved)
     .then(() => {
@@ -88,7 +97,7 @@ const App = () => {
     setNewName(event.target.value)
   }
 
-  const handleNumberChange = (event) => {3
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
 
@@ -109,10 +118,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+        <ErrorMessage errorMessage={errorMessage}/>
         <Notification message={message}/>
         <Filter newFilter = {newFilter} onChange={handleFilterChange}/>
         <PersonForm addName ={addName} newName = {newName} newNumber = {newNumber} handleNameChange ={handleNameChange} handleNumberChange ={handleNumberChange}/>
-      
       <h3>Numbers</h3>
         <PersonsList personsToShow={personsToShow} removePerson={removePerson}/>
     </div>
