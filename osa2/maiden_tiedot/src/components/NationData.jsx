@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import nationService from '../services/nations'
 import Languages from './Languages'
+import Weather from './Weather'
 
 
 
@@ -16,7 +17,7 @@ const NationData = ({nation}) => {
     }, []
 )
 
-    
+
 if (data !== null) {
     return (
         <div>
@@ -26,6 +27,9 @@ if (data !== null) {
             <p><b>Languages</b></p>
             <Languages data={data.languages}/>
             <img src={data.flags.png} alt={data.flags.alt} width="200"/>
+            <p><b>Weather in {data.capital[0]}</b></p>
+            <Weather capital_lat={data.capitalInfo.latlng[0]} capital_long={data.capitalInfo.latlng[1]}/>
+            
 
         </div>
     )
