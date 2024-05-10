@@ -1,8 +1,4 @@
 import axios from 'axios'
-//Toimii paikallisesti
-//const baseUrl = 'http://localhost:3002/persons'
-
-//Toimii backendin kanssa
 const baseUrl = '/api/persons'
 
 const getAll = () => {
