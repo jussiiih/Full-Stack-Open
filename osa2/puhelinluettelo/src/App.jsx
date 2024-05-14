@@ -28,36 +28,45 @@ const App = () => {
     const phonebookObject = {
       name: newName, number: newNumber
     }
-    
+
     personService
     .getAll()
     .then(persons => {
         const existingPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
         if (existingPerson) {
-            
-          if (window.confirm (`${existingPerson.name} is already added to phonebook. Do you want to replace the old number with a new one?`) === true){
-            const updatedPerson = { ...existingPerson, number: newNumber }
-            personService
-            .changeNumber(existingPerson, updatedPerson)
-                .then(() => {
-                    setPersons(prevPersons => prevPersons.map(person =>
-                        person.id === existingPerson.id ? updatedPerson : person
-                      )
+            if ((/^[0-9]{2,3}-/).test(newNumber) === false || /^([^-]*-){1}[^-]*$/.test(newNumber) === false || (/-[0-9]*$/).test(newNumber) === false || newNumber.length < 8)
+              {
+                setErrorMessage(' The number shouls have a form of two or three numbers, a dash and more numbers so that it is at least 8 characters long.')
+                setTimeout(() => {
+                  setErrorMessage(null)
+                }, 5000)
+              }
+
+            else {
+              if (window.confirm (`${existingPerson.name} is already added to phonebook. Do you want to replace the old number with a new one?`) === true){
+                const updatedPerson = { ...existingPerson, number: newNumber }
+                personService
+                .changeNumber(existingPerson, updatedPerson)
+                    .then(() => {
+                        setPersons(prevPersons => prevPersons.map(person =>
+                            person.id === existingPerson.id ? updatedPerson : person
+                          )
+                        )
+                        setMessage (
+                          `${updatedPerson.name}'s number changed.`
+                        )
+                        setTimeout(() => {
+                          setMessage(null)
+                        }, 5000)
+                    }
                     )
-                    setMessage (
-                      `${updatedPerson.name}'s number changed.`
-                    )
-                    setTimeout(() => {
-                      setMessage(null)
-                    }, 5000)
-                }
-                )
-                .catch(error => {
-                  setErrorMessage(`${updatedPerson.name} has already been removed from the server`)
-                  setTimeout(() => {
-                    setErrorMessage(null)
-                  }, 5000)
-                })
+                    .catch(error => {
+                      setErrorMessage(`${updatedPerson.name} has already been removed from the server`)
+                      setTimeout(() => {
+                        setErrorMessage(null)
+                      }, 5000)
+                    })
+                  }     
 
         }}
         else {
