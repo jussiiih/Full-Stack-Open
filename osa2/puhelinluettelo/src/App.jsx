@@ -77,8 +77,12 @@ const App = () => {
 
           })
           .catch(error => {
-            console.log(error.response.data)
-            console.log('At least two letters in name')
+            setErrorMessage(
+              `${error.response.data.error}`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
       
       
