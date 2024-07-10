@@ -60,6 +60,13 @@ const initialBlogs = [
     }
 ]
 
+const newBlog = {
+    title: 'This is a blog',
+    author: 'Blog Author',
+    url: 'https://blogwebsite.com/',
+    likes: 100
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     const blogObjects = initialBlogs
@@ -85,6 +92,20 @@ test('every blog has key "id"', async () => {
     const blogs_with_id = lodash.filter(response.body, (blog) => 'id' in blog).length
     assert.strictEqual(blogs_with_id, initialBlogs.length)
 })
+
+test('HTTP POST adds one blog', async () => {
+    await api.post('/api/blogs').send(newBlog)
+    const response = await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+})
+
+test('HTTP POST has same keys', async () => {
+    await api.post('/api/blogs').send(newBlog)
+    const response = await api.get('/api/blogs')
+    assert.deepStrictEqual(lodash.keys(response.body[0]), lodash.keys(response.body[(response.body.length)-1]))
+})
+
 
 after(async () => {
     await mongoose.connection.close()
