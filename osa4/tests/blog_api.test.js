@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
+const lodash = require('lodash')
 
 const api = supertest(app)
 
@@ -77,6 +78,12 @@ test('content type is JSON', async () => {
 test('right number of blogs', async () => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
+test('every blog has key "id"', async () => {
+    const response = await api.get('/api/blogs')
+    const blogs_with_id = lodash.filter(response.body, (blog) => 'id' in blog).length
+    assert.strictEqual(blogs_with_id, initialBlogs.length)
 })
 
 after(async () => {
