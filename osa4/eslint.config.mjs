@@ -21,10 +21,6 @@ export default [
         'error',
         4
       ],
-      '@stylistic/js/linebreak-style': [
-        'error',
-        'windows'
-      ],
       '@stylistic/js/quotes': [
         'error',
         'single'
