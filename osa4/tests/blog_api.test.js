@@ -73,6 +73,18 @@ const newBlogWithoutLikes = {
     url: 'https://nolikesblogwebsite.com/'
 }
 
+const newBlogWithoutTitle = {
+    author: 'Blog Author',
+    url: 'https://blogwebsite.com/',
+    likes: 100
+}
+
+const newBlogWithoutUrl = {
+    title: 'This is a blog',
+    author: 'Blog Author',
+    likes: 100
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     const blogObjects = initialBlogs
@@ -116,6 +128,16 @@ test('HTTP POST without likes gets 0 likes', async () => {
     await api.post('/api/blogs').send(newBlogWithoutLikes)
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body[(response.body.length)-1].likes, 0)
+})
+
+test('HTTP POST without title is responded by 400 Bad Request ', async () => {
+    const response = await api.post('/api/blogs').send(newBlogWithoutTitle)
+    assert.strictEqual(response.statusCode, 400)
+})
+
+test('HTTP POST without URL is responded by 400 Bad Request ', async () => {
+    const response = await api.post('/api/blogs').send(newBlogWithoutUrl)
+    assert.strictEqual(response.statusCode, 400)
 })
 
 after(async () => {
