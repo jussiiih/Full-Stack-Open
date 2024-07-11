@@ -67,6 +67,12 @@ const newBlog = {
     likes: 100
 }
 
+const newBlogWithoutLikes = {
+    title: 'This is a blog without likes',
+    author: 'Nolikes Author',
+    url: 'https://nolikesblogwebsite.com/'
+}
+
 beforeEach(async () => {
     await Blog.deleteMany({})
     const blogObjects = initialBlogs
@@ -106,6 +112,11 @@ test('HTTP POST has same keys', async () => {
     assert.deepStrictEqual(lodash.keys(response.body[0]), lodash.keys(response.body[(response.body.length)-1]))
 })
 
+test('HTTP POST without likes gets 0 likes', async () => {
+    await api.post('/api/blogs').send(newBlogWithoutLikes)
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body[(response.body.length)-1].likes, 0)
+})
 
 after(async () => {
     await mongoose.connection.close()
