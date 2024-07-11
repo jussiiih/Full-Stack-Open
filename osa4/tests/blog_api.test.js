@@ -140,6 +140,24 @@ test('HTTP POST without URL is responded by 400 Bad Request ', async () => {
     assert.strictEqual(response.statusCode, 400)
 })
 
+test('HTTP DELETE deletes on blog ', async () => {
+    const response1 = await api.get('/api/blogs')
+    const last_id = response1.body[response1.body.length-1].id
+    await api.delete(`/api/blogs/${last_id}`)
+
+    const response2 = await api.get('/api/blogs')
+    assert.strictEqual(response2.body.length, initialBlogs.length - 1)
+})
+
+test('after HTTP DELETE deleted id does not exist ', async () => {
+    const response1 = await api.get('/api/blogs')
+    const last_id = response1.body[response1.body.length-1].id
+    await api.delete(`/api/blogs/${last_id}`)
+
+    const response2 = await api.get('/api/blogs')
+    assert.deepStrictEqual(response2.body.map((blog) => blog.id), response1.body.map((blog) => blog.id).slice(0, -1))
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
