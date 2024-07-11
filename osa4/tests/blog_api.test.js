@@ -73,6 +73,13 @@ const newBlogWithoutLikes = {
     url: 'https://nolikesblogwebsite.com/'
 }
 
+const data_to_be_updated = {
+    title: 'Updated Blog',
+    author: 'Updated Author',
+    url: 'https://updatedblogwebsite.com/',
+    likes: 1000
+}
+
 const newBlogWithoutTitle = {
     author: 'Blog Author',
     url: 'https://blogwebsite.com/',
@@ -156,6 +163,23 @@ test('after HTTP DELETE deleted id does not exist ', async () => {
 
     const response2 = await api.get('/api/blogs')
     assert.deepStrictEqual(response2.body.map((blog) => blog.id), response1.body.map((blog) => blog.id).slice(0, -1))
+})
+
+test('HTTP UPDATE works', async () => {
+    const response1 = await api.get('/api/blogs')
+    const response1_body = response1.body
+    response1_body[0].title = data_to_be_updated.title
+    response1_body[0].author = data_to_be_updated.author
+    response1_body[0].url = data_to_be_updated.url
+    response1_body[0].likes = data_to_be_updated.likes
+
+    const response2 = await api.get('/api/blogs')
+    const id= response2.body[0].id
+    await api.put(`/api/blogs/${id}`).send(data_to_be_updated)
+    const response4 = await api.get('/api/blogs')
+    const response4_body = response4.body
+
+    assert.deepStrictEqual(response1_body, response4_body)
 })
 
 after(async () => {

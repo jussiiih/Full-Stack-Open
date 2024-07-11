@@ -7,4 +7,3 @@ Content-Type: application/json
   "url": "www",
   "likes": 87
 }
-
