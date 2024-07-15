@@ -1,5 +1,6 @@
 const { test, after, beforeEach } = require('node:test')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -92,10 +93,32 @@ const newBlogWithoutUrl = {
     likes: 100
 }
 
+const newUser = {
+    username: 'ile',
+    name: 'Ilmari',
+    password: 'salasana11'
+}
+
+const initialUser = {
+    username: 'samppa',
+    name: 'Sami',
+    password: 'salasana55'
+}
+
+
 beforeEach(async () => {
     await Blog.deleteMany({})
-    const blogObjects = initialBlogs
-        .map(blog => new Blog(blog))
+    await User.deleteMany({})
+
+    const userResponse = await api.post('/api/users').send(initialUser)
+    const userId = userResponse.body.id
+
+    const blogsWithUser = initialBlogs.map(blog => ({
+        ...blog,
+        user: userId
+    }))
+
+    const blogObjects = blogsWithUser.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blog => blog.save())
     await Promise.all(promiseArray)
 })
@@ -119,48 +142,82 @@ test('every blog has key "id"', async () => {
 })
 
 test('HTTP POST adds one blog', async () => {
-    await api.post('/api/blogs').send(newBlog)
+    const newUserToBeAdded = await api.post('/api/users').send(newUser)
+    const { name, ...userToLogIn } = newUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog)
     const response = await api.get('/api/blogs')
 
     assert.strictEqual(response.body.length, initialBlogs.length + 1)
 })
 
-test('HTTP POST has same keys', async () => {
-    await api.post('/api/blogs').send(newBlog)
+test('HTTP POST has same keys ', async () => {
+    const newUserToBeAdded = await api.post('/api/users').send(newUser)
+    const { name, ...userToLogIn } = newUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog)
     const response = await api.get('/api/blogs')
-    assert.deepStrictEqual(lodash.keys(response.body[0]), lodash.keys(response.body[(response.body.length)-1]))
+    assert.deepStrictEqual(lodash.keys((response.body[0])), lodash.keys(response.body[(response.body.length)-1]))
 })
 
 test('HTTP POST without likes gets 0 likes', async () => {
-    await api.post('/api/blogs').send(newBlogWithoutLikes)
+    const newUserToBeAdded = await api.post('/api/users').send(newUser)
+    const { name, ...userToLogIn } = newUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlogWithoutLikes)
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body[(response.body.length)-1].likes, 0)
 })
 
 test('HTTP POST without title is responded by 400 Bad Request ', async () => {
-    const response = await api.post('/api/blogs').send(newBlogWithoutTitle)
+    const newUserToBeAdded = await api.post('/api/users').send(newUser)
+    const { name, ...userToLogIn } = newUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    const response = await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlogWithoutTitle)
     assert.strictEqual(response.statusCode, 400)
 })
 
 test('HTTP POST without URL is responded by 400 Bad Request ', async () => {
-    const response = await api.post('/api/blogs').send(newBlogWithoutUrl)
+    const newUserToBeAdded = await api.post('/api/users').send(newUser)
+    const { name, ...userToLogIn } = newUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    const response = await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlogWithoutUrl)
     assert.strictEqual(response.statusCode, 400)
 })
 
 test('HTTP DELETE deletes on blog ', async () => {
     const response1 = await api.get('/api/blogs')
     const last_id = response1.body[response1.body.length-1].id
-    await api.delete(`/api/blogs/${last_id}`)
 
+    const { name, ...userToLogIn } = initialUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    await api.delete(`/api/blogs/${last_id}`).set('Authorization', `Bearer ${token}`)
     const response2 = await api.get('/api/blogs')
+
     assert.strictEqual(response2.body.length, initialBlogs.length - 1)
 })
 
 test('after HTTP DELETE deleted id does not exist ', async () => {
     const response1 = await api.get('/api/blogs')
     const last_id = response1.body[response1.body.length-1].id
-    await api.delete(`/api/blogs/${last_id}`)
 
+    const { name, ...userToLogIn } = initialUser
+    const login = await api.post('/api/login').send(userToLogIn)
+    const token = login.body.token
+
+    await api.delete(`/api/blogs/${last_id}`).set('Authorization', `Bearer ${token}`)
     const response2 = await api.get('/api/blogs')
     assert.deepStrictEqual(response2.body.map((blog) => blog.id), response1.body.map((blog) => blog.id).slice(0, -1))
 })
