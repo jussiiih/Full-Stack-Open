@@ -2,8 +2,11 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "rgerg",
-  "author": "Vieno",
+  "title": "Kaino",
+  "author": "Kaino",
   "url": "www.vieno.fi",
   "likes": 57
 }
+
+//,
+  //"user_id": "6690e41c690bb97ac163f85d"
