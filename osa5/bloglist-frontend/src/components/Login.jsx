@@ -3,12 +3,12 @@ const Login = ({handleLogin, username, password, setUsername, setPassword}) => (
     <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
           <div>
-            Username
+            Username: 
             <input type='text' value={username} name="username" onChange={({target}) => setUsername(target.value)}
           />
           </div>
           <div>
-            Password
+            Password: 
             <input type='text' value={password} name="password" onChange={({target}) => setPassword(target.value)}
           />
           </div>

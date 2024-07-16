@@ -6,6 +6,7 @@ import Login from './components/Login'
 import BlogList from './components/BlogList'
 //import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
+import NewBlog from './components/NewBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +14,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     if (user) {
@@ -27,8 +31,21 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }  
   }, [])
+
+  const newBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title,
+      author,
+      url,
+      user
+    }
+
+    blogService.newBlog(blogObject)
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -40,7 +57,7 @@ const App = () => {
       window.localStorage.setItem(
         'loggedBlogUser', JSON.stringify(user)
       )
-      
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -53,21 +70,47 @@ const App = () => {
     }
   }
 
-  
-
   const handleLogout = async (event) => {
     event.preventDefault()
     setUser('')
     window.localStorage.clear()
   }
 
+  const handleNewBlog = async (event) => {
+    event.preventDefault();
+    if (!title || !author || !url) {
+      setErrorMessage('Title, Author and URL are required.')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      return
+    }
+    
+    const blogObject = {
+      title,
+      author,
+      url
+    }
+    await blogService.newBlog(blogObject);
+    const updatedBlogs = await blogService.getAll();
+    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username));
+    setTitle('');
+    setAuthor('');
+    setUrl('');
+  }
+
 
 
   return (
     <div>
-      {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
-      {!user && <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>}
-      {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
+      <div>
+        {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
+        {!user && <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>}
+        {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
+      </div>
+      <div>
+        {user && <NewBlog title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog}/>}
+      </div>
     </div>
   )
 }
