@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Login from './components/Login'
+import BlogList from './components/BlogList'
+//import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -28,7 +32,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
 
     try {
       const user = await loginService.login({
@@ -43,35 +46,14 @@ const App = () => {
       setPassword('')
     }
     catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('Wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
 
-  const loginForm = () => (
-    
-    <div>
-    <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-          <div>
-            Username
-            <input type='text' value={username} name="username" onChange={({target}) => setUsername(target.value)}
-          />
-          </div>
-          <div>
-            Password
-            <input type='text' value={password} name="password" onChange={({target}) => setPassword(target.value)}
-          />
-          </div>
-          <div>
-            <button type='submit'>Login</button>
-          </div>
-        </form>
-    </div>
-
-  )
+  
 
   const handleLogout = async (event) => {
     event.preventDefault()
@@ -79,24 +61,13 @@ const App = () => {
     window.localStorage.clear()
   }
 
-  const blogList = () => (
-    <div>
-      <h2>Blogs</h2>
-      <p>{user.name} logged in 
-        <button type='submit' onClick={handleLogout}>Logout</button>
-      </p>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog}/>
-      )}
-  </div>
-  )
+
 
   return (
-
     <div>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      {!user && loginForm()}
-      {user && blogList()}
+      {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
+      {!user && <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>}
+      {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
     </div>
   )
 }
