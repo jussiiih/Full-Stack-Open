@@ -19,14 +19,23 @@ const Blog = ({ blog, setBlogs, user }) => {
     setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
   }
 
+  const handleDelete = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.title}`)) {
+      await blogService.deleteBlog(blog.id)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+    }
+  }
+
   const [showAllInfo, setShowAllInfo] = useState(false)
   if (showAllInfo) {
     return (
       <div style={blogStyle}>
-        {blog.title} <button onClick={() => setShowAllInfo(false)}>Hide</button><br/>
-        {blog.url}<br/>
+        Title: {blog.title} <button onClick={() => setShowAllInfo(false)}>Hide</button><br/>
+        URL: {blog.url}<br/>
         Likes: {blog.likes} <button onClick={handleLike}>Like</button><br/>
-        {blog.author}<br/>
+        Author: {blog.author}<br/>
+        <button onClick={handleDelete}>Remove</button><br/>
       </div>
     )
   }
