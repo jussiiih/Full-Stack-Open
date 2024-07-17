@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, setBlogs, user }) => {
@@ -9,12 +9,12 @@ const Blog = ({ blog, setBlogs, user }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   const handleLike = async () => {
-    await blogService.updateBlog(blog.id, {title: blog.title,
-                url: blog.url,
-                likes: blog.likes + 1,
-                author: blog.author})
+    await blogService.updateBlog(blog.id, { title: blog.title,
+      url: blog.url,
+      likes: blog.likes + 1,
+      author: blog.author })
     const updatedBlogs = await blogService.getAll()
     setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
   }

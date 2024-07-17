@@ -32,7 +32,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-    }  
+    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -49,7 +49,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setNotification(`Login successful`)
+      setNotification('Login successful')
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -66,14 +66,14 @@ const App = () => {
     event.preventDefault()
     setUser('')
     window.localStorage.clear()
-    setNotification(`Logged out`)
+    setNotification('Logged out')
     setTimeout(() => {
       setNotification(null)
     }, 5000)
   }
 
-  const hideWhenVisible = { display: newBlogVisible ? 'none' : ''}
-  const showWhenVisible = { display: newBlogVisible ? '' : 'none'}
+  const hideWhenVisible = { display: newBlogVisible ? 'none' : '' }
+  const showWhenVisible = { display: newBlogVisible ? '' : 'none' }
 
 
   return (
@@ -98,8 +98,8 @@ const App = () => {
       </div>
 
       <div>
-          <br/>
-          {user && <BlogList blogs={blogs} setBlogs={setBlogs} user={user}/>}
+        <br/>
+        {user && <BlogList blogs={blogs} setBlogs={setBlogs} user={user}/>}
       </div>
 
     </div>
