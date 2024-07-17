@@ -4,7 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
 import BlogList from './components/BlogList'
-//import Notification from './components/Notification'
+import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
 import NewBlog from './components/NewBlog'
 
@@ -13,6 +13,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -35,17 +36,10 @@ const App = () => {
     }  
   }, [])
 
-  const newBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title,
-      author,
-      url,
-      user
-    }
 
-    blogService.newBlog(blogObject)
-  }
+
+
+
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -61,6 +55,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification(`Login successful`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
     catch (exception) {
       setErrorMessage('Wrong username or password')
@@ -74,6 +72,10 @@ const App = () => {
     event.preventDefault()
     setUser('')
     window.localStorage.clear()
+    setNotification(`Logged out`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
   }
 
   const handleNewBlog = async (event) => {
@@ -91,12 +93,16 @@ const App = () => {
       author,
       url
     }
-    await blogService.newBlog(blogObject);
-    const updatedBlogs = await blogService.getAll();
-    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username));
-    setTitle('');
-    setAuthor('');
-    setUrl('');
+    await blogService.newBlog(blogObject)
+    const updatedBlogs = await blogService.getAll()
+    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+    setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
   }
 
 
@@ -104,6 +110,7 @@ const App = () => {
   return (
     <div>
       <div>
+        {notification && <Notification notification={notification}/>}
         {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
         {!user && <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>}
         {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
