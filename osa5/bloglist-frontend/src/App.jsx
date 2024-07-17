@@ -7,7 +7,6 @@ import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
 import NewBlog from './components/NewBlog'
-import loggedUser from './components/LoggedUser'
 import LoggedUser from './components/LoggedUser'
 
 const App = () => {
@@ -17,9 +16,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [newBlogVisible, setNewBlogVisible] = useState(null)
 
   useEffect(() => {
@@ -76,34 +72,6 @@ const App = () => {
     }, 5000)
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
-    if (!title || !author || !url) {
-      setErrorMessage('Title, Author and URL are required.')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      return
-    }
-    
-    const blogObject = {
-      title,
-      author,
-      url
-    }
-    await blogService.newBlog(blogObject)
-    const updatedBlogs = await blogService.getAll()
-    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-  }
-
-
   const hideWhenVisible = { display: newBlogVisible ? 'none' : ''}
   const showWhenVisible = { display: newBlogVisible ? '' : 'none'}
 
@@ -122,7 +90,7 @@ const App = () => {
           {user && <button onClick={() => setNewBlogVisible(true)}>New blog</button>}
         </div>
         <div style={showWhenVisible}>
-          {user && <NewBlog title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog}/>}
+          {user && <NewBlog setBlogs={setBlogs} user={user} setNotification={setNotification} setErrorMessage={setErrorMessage}/>}
         </div>
         <div style={showWhenVisible}>
           {user && <button onClick={() => setNewBlogVisible(false)}>Cancel</button>}

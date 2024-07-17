@@ -1,4 +1,41 @@
-const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, handleNewBlog}) => (
+import { useState } from "react"
+import blogService from '../services/blogs'
+
+const NewBlog = ({ setBlogs, user, setNotification, setErrorMessage }) => {
+
+    
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const handleNewBlog = async (event) => {
+        event.preventDefault();
+        if (!title || !author || !url) {
+        setErrorMessage('Title, Author and URL are required.')
+        setTimeout(() => {
+            setErrorMessage(null)
+        }, 5000)
+        return
+        }
+        
+        const blogObject = {
+        title,
+        author,
+        url
+        }
+        await blogService.newBlog(blogObject)
+        const updatedBlogs = await blogService.getAll()
+        setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+        setNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`)
+        setTimeout(() => {
+            setNotification(null)
+        }, 5000)
+    }
+
+    return (
     <div>
         <h2>Create New Blog</h2>
             <form onSubmit={handleNewBlog}>
@@ -19,6 +56,6 @@ const NewBlog = ({title, setTitle, author, setAuthor, url, setUrl, handleNewBlog
                 </div>
             </form>
     </div>
-)
-
+    )
+}
 export default NewBlog
