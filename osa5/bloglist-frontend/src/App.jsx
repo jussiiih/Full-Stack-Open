@@ -98,6 +98,7 @@ const App = () => {
       </div>
 
       <div>
+          <br/>
           {user && <BlogList blogs={blogs}/>}
       </div>
 
