@@ -7,6 +7,8 @@ import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
 import NewBlog from './components/NewBlog'
+import loggedUser from './components/LoggedUser'
+import LoggedUser from './components/LoggedUser'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -112,8 +114,9 @@ const App = () => {
         {notification && <Notification notification={notification}/>}
         {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
         {!user && <Login handleLogin={handleLogin} username={username} setUsername={setUsername} password={password} setPassword={setPassword}/>}
-        {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
+        {user && <LoggedUser user={user} handleLogout={handleLogout}/>}
       </div>
+
       <div>
         <div style={hideWhenVisible}>
           {user && <button onClick={() => setNewBlogVisible(true)}>New blog</button>}
@@ -125,6 +128,11 @@ const App = () => {
           {user && <button onClick={() => setNewBlogVisible(false)}>Cancel</button>}
         </div>
       </div>
+
+      <div>
+          {user && <BlogList blogs={blogs}/>}
+      </div>
+
     </div>
   )
 }

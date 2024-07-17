@@ -1,11 +1,7 @@
 import Blog from './Blog'
 
-const blogList = ({user, blogs, handleLogout}) => (
+const blogList = ({ blogs }) => (
     <div>
-      <h2>Blogs</h2>
-      <p>{user.name} logged in 
-        <button type='submit' onClick={handleLogout}>Logout</button>
-      </p>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog}/>
       )}
