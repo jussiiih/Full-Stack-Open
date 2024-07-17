@@ -18,6 +18,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [newBlogVisible, setNewBlogVisible] = useState(null)
 
   useEffect(() => {
     if (user) {
@@ -35,11 +36,6 @@ const App = () => {
       blogService.setToken(user.token)
     }  
   }, [])
-
-
-
-
-
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -106,6 +102,9 @@ const App = () => {
   }
 
 
+  const hideWhenVisible = { display: newBlogVisible ? 'none' : ''}
+  const showWhenVisible = { display: newBlogVisible ? '' : 'none'}
+
 
   return (
     <div>
@@ -116,7 +115,15 @@ const App = () => {
         {user && <BlogList user={user} blogs={blogs} handleLogout={handleLogout}/>}
       </div>
       <div>
-        {user && <NewBlog title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog}/>}
+        <div style={hideWhenVisible}>
+          {user && <button onClick={() => setNewBlogVisible(true)}>New blog</button>}
+        </div>
+        <div style={showWhenVisible}>
+          {user && <NewBlog title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} handleNewBlog={handleNewBlog}/>}
+        </div>
+        <div style={showWhenVisible}>
+          {user && <button onClick={() => setNewBlogVisible(false)}>Cancel</button>}
+        </div>
       </div>
     </div>
   )
