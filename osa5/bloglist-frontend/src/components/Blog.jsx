@@ -1,4 +1,5 @@
 import { useState } from "react"
+import blogService from '../services/blogs'
 
 const Blog = ({ blog }) => {
   const blogStyle = {
@@ -6,16 +7,25 @@ const Blog = ({ blog }) => {
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginbottom: 5
+    marginBottom: 5
   }
   
+  const handleLike = async () => {
+    await blogService.updateBlog(blog.id, {title: blog.title,
+                url: blog.url,
+                likes: blog.likes + 1,
+                author: blog.author})
+    await blogService.getAll()
+    blogs => setBlogs(blogs.filter(blog => blog.user.username === user.username))
+  }
+
   const [showAllInfo, setShowAllInfo] = useState(false)
   if (showAllInfo) {
     return (
       <div style={blogStyle}>
         {blog.title} <button onClick={() => setShowAllInfo(false)}>Hide</button><br/>
         {blog.url}<br/>
-        {blog.likes} <button onClick={() => null}>Like</button><br/>
+        {blog.likes} <button onClick={handleLike}>Like</button><br/>
         {blog.author}<br/>
       </div>
     )
