@@ -26,4 +26,29 @@ describe('Blog app', () => {
     await expect(loginButtonLocator).toBeVisible()
 
   })
+
+  describe('Login', () => {
+    test('succeeds with correct credentials', async ({ page }) => {
+      await page.getByTestId('username').fill('mluukkai')
+      await page.getByTestId('password').fill('salainen')
+      await page.getByRole('button', { name: 'Login' }).click()
+
+      await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible()
+      await expect(page.getByText('Wrong username or password')).toBeHidden()
+    })
+
+    test('fails with wrong credentials', async ({ page }) => {
+      await page.getByTestId('username').fill('mluukkai')
+      await page.getByTestId('password').fill('wrongpassword')
+      await page.getByRole('button', { name: 'Login' }).click()
+
+      await expect(page.getByText('Matti Luukkainen logged in')).toBeHidden()
+      await expect(page.getByText('Wrong username or password')).toBeVisible()
+    })
+  })
+
 })
+
+// Tee testit kirjautumiselle. Testaa sekä onnistunut että epäonnistunut kirjautuminen.
+// Luo testejä varten käyttäjä beforeEach-lohkossa.
+
