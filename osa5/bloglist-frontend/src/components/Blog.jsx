@@ -28,6 +28,8 @@ const Blog = ({ blog, setBlogs, user }) => {
   }
 
   const [showAllInfo, setShowAllInfo] = useState(false)
+
+
   if (showAllInfo) {
     return (
       <div style={blogStyle}>
@@ -35,7 +37,7 @@ const Blog = ({ blog, setBlogs, user }) => {
         URL: {blog.url}<br/>
         Likes: {blog.likes} <button onClick={handleLike}>Like</button><br/>
         Author: {blog.author}<br/>
-        <button onClick={handleDelete}>Remove</button><br/>
+        {(blog.user.username === user.username) && <button onClick={handleDelete}>Remove</button>}
       </div>
     )
   }

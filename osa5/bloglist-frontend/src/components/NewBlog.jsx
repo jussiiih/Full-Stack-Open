@@ -24,7 +24,7 @@ const NewBlog = ({ setBlogs, user, setNotification, setErrorMessage }) => {
     }
     await blogService.newBlog(blogObject)
     const updatedBlogs = await blogService.getAll()
-    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+    setBlogs(updatedBlogs/*.filter(blog => blog.user.username === user.username)*/)
     setTitle('')
     setAuthor('')
     setUrl('')
