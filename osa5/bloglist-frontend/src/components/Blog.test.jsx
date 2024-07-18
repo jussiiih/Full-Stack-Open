@@ -9,7 +9,7 @@ const blog = {
   author: 'A. Author',
   url: 'www.authorblog.com',
   likes: 10,
-  user: { usernname: 'testuser' }
+  user: { username: 'testuser' }
 }
 
 vi.mock ('../services/blogs')
