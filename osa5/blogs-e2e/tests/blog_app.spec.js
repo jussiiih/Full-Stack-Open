@@ -47,8 +47,26 @@ describe('Blog app', () => {
     })
   })
 
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      
+      await page.getByTestId('username').fill('mluukkai')
+      await page.getByTestId('password').fill('salainen')
+      await page.getByRole('button', { name: 'Login' }).click()
+    })
+  
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'New blog' }).click()
+      await page.getByTestId('title').fill('An Awesome Blog Title')
+      await page.getByTestId('author').fill('C. Author')
+      await page.getByTestId('url').fill('www.awesomeblog.com')
+      await page.getByRole('button', { name: 'Create' }).click()
+
+      await expect(page.getByText('An Awesome Blog Title').nth(1)).toBeVisible()
+
+    })
+  })
+
 })
 
-// Tee testit kirjautumiselle. Testaa sekä onnistunut että epäonnistunut kirjautuminen.
-// Luo testejä varten käyttäjä beforeEach-lohkossa.
 

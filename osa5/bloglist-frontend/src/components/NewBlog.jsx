@@ -40,15 +40,15 @@ const NewBlog = ({ setBlogs, user, setNotification, setErrorMessage }) => {
       <form onSubmit={handleNewBlog}>
         <div>
                     Title:
-          <input type='text' value={title} name="title" onChange={({ target }) => setTitle(target.value)} placeholder='Write Blog Title here'/>
+          <input type='text' value={title} name="title" onChange={({ target }) => setTitle(target.value)} placeholder='Write Blog Title here' data-testid='title'/>
         </div>
         <div>
                     Author:
-          <input type='text' value={author} name="author" onChange={({ target }) => setAuthor(target.value)} placeholder='Write Blog Author here'/>
+          <input type='text' value={author} name="author" onChange={({ target }) => setAuthor(target.value)} placeholder='Write Blog Author here' data-testid='author'/>
         </div>
         <div>
                     URL:
-          <input type='text' value={url} name="url" onChange={({ target }) => setUrl(target.value)} placeholder='Write Blog URL here'/>
+          <input type='text' value={url} name="url" onChange={({ target }) => setUrl(target.value)} placeholder='Write Blog URL here' data-testid='url'/>
         </div>
         <div>
           <button type="submit">Create</button>
