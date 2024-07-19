@@ -107,8 +107,100 @@ describe('Blog app', () => {
 
         await viewButton.nth(1).click()
         await expect(removeButton).toBeVisible()
-      })   
+      })
+    
       })
     })
+  })
+
+test('Blogs are orderer by likes', async ({page, request}) => {
+  const viewButton = page.getByRole('button', { name: 'View' })
+  
+  await request.post('/api/testing/reset')
+  await request.post('/api/users', {
+    data: {
+      name: 'Matti Luukkainen',
+      username: 'mluukkai',
+      password: 'salainen'
+    }
+  })
+
+  const loginResponse = await request.post('/api/login', {
+    data: {
+        username: 'mluukkai',
+        password: 'salainen'
+    }})
+  
+  const { token }= await loginResponse.json()
+
+  await request.post('/api/blogs', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      title: 'First Blog',
+      author: 'First Author',
+      url: 'www.first.com',
+      likes: 10
+    }
+  })
+
+  await request.post('/api/blogs', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      title: 'Second Blog',
+      author: 'Second Author',
+      url: 'www.second.com',
+      likes: 20
+    }
+  })
+
+  await request.post('/api/blogs', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      title: 'Third Blog',
+      author: 'Third Author',
+      url: 'www.third.com',
+      likes: 30
+    }
+  })
+
+  await request.post('/api/blogs', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      title: 'Fourth Blog',
+      author: 'Fourh Author',
+      url: 'www.fourth.com',
+      likes: 15
+    }
+  })
+
+  await page.goto('/')
+  await login(page, 'mluukkai', 'salainen')
+  await page.getByText('Matti Luukkainen logged in').waitFor()
+  await viewButton.nth(0).click()
+  await viewButton.nth(0).click()
+  await viewButton.nth(0).click()
+  await viewButton.nth(0).click()
+
+  const pageText = await page.evaluate(() => document.body.innerText)
+  const pageRows = pageText.split('\n')
+  const likeRows = pageRows.filter(row => row.startsWith('Likes'))
+
+  const regex = /Likes:\s*(\d+)/
+  const likes = likeRows.map(row => {
+    const match = row.match(regex);
+    return match ? parseInt(match[1], 10) : null;
+  })
+
+  const sorted_likes = [...likes].sort((a,b) => (b-a))
+
+  expect(likes).toStrictEqual(sorted_likes)
   })
 
