@@ -67,6 +67,7 @@ const App = () => {
     setUser('')
     window.localStorage.clear()
     setNotification('Logged out')
+    setNewBlogVisible(false)
     setTimeout(() => {
       setNotification(null)
     }, 5000)

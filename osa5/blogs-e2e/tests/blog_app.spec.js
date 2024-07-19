@@ -55,7 +55,7 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'Login' }).click()
     })
   
-    test('a new blog can be created', async ({ page }) => {
+    test('a new blog can be added', async ({ page }) => {
       await page.getByRole('button', { name: 'New blog' }).click()
       await page.getByTestId('title').fill('An Awesome Blog Title')
       await page.getByTestId('author').fill('C. Author')
@@ -94,9 +94,38 @@ describe('Blog app', () => {
         await expect(page.getByText('www.awesomeblog.com')).not.toBeVisible()
       })
 
+      test('Only the user that added a blog can see Remove button', async ({ page, request }) => {
+        await page.getByRole('button', { name: 'View' }).click()
+        await expect(page.getByRole('button', { name: 'Remove' })).toBeVisible()
+        await page.getByRole('button', { name: 'Logout' }).click()
+
+        await request.post('http://localhost:3001/api/users', {
+          data: {
+            name: 'Another User',
+            username: 'another',
+            password: 'password'
+          }
+        })
+        await page.getByTestId('username').fill('another')
+        await page.getByTestId('password').fill('password')
+        await page.getByRole('button', { name: 'Login' }).click()
+
+        await page.getByRole('button', { name: 'New blog' }).click()
+        await page.getByTestId('title').fill('Another Blog')
+        await page.getByTestId('author').fill('D. Author')
+        await page.getByTestId('url').fill('www.anotherblog.com')
+        await page.getByRole('button', { name: 'Create' }).click()
+        
+        const removeButton = page.getByRole('button', { name: 'Remove' })
+
+        await page.getByRole('button', { name: 'View' }).nth(0).click()
+        await expect(removeButton).not.toBeVisible()
+        await page.getByRole('button', { name: 'Hide' }).click()
+
+        await page.getByRole('button', { name: 'View' }).nth(1).click()
+        await expect(removeButton).toBeVisible()
+      })   
+      })
     })
-
   })
-
-})
 
