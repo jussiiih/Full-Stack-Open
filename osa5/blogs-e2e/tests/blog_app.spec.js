@@ -83,7 +83,7 @@ describe('Blog app', () => {
         await expect(page.getByText('Likes: 1')).toBeVisible()
       })
 
-      test.only('Blog can be deleted', async ({ page }) => {
+      test('Blog can be deleted', async ({ page }) => {
         await page.getByRole('button', { name: 'View' }).click()
         
         page.on('dialog', dialog => dialog.accept())
@@ -92,8 +92,6 @@ describe('Blog app', () => {
         await expect(page.getByText('An Awesome Blog Title').nth(1)).not.toBeVisible()
         await expect(page.getByText('C. Author')).not.toBeVisible()
         await expect(page.getByText('www.awesomeblog.com')).not.toBeVisible()
-
-
       })
 
     })
