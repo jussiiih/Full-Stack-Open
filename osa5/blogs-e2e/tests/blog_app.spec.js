@@ -62,7 +62,7 @@ describe('Blog app', () => {
       await page.getByTestId('url').fill('www.awesomeblog.com')
       await page.getByRole('button', { name: 'Create' }).click()
 
-
+      await expect(page.getByTestId('bloglist').getByText('An Awesome Blog Title').nth(1)).toBeVisible()
       await expect(page.getByText('An Awesome Blog Title').nth(1)).toBeVisible()
 
 
