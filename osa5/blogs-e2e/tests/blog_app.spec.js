@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { login, addNewBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -29,18 +30,14 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('mluukkai')
-      await page.getByTestId('password').fill('salainen')
-      await page.getByRole('button', { name: 'Login' }).click()
+      await login(page, 'mluukkai', 'salainen')
 
       await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible()
       await expect(page.getByText('Wrong username or password')).toBeHidden()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username').fill('mluukkai')
-      await page.getByTestId('password').fill('wrongpassword')
-      await page.getByRole('button', { name: 'Login' }).click()
+      await login(page, 'mluukkai', 'wrongpassword')
 
       await expect(page.getByText('Matti Luukkainen logged in')).toBeHidden()
       await expect(page.getByText('Wrong username or password')).toBeVisible()
@@ -49,18 +46,11 @@ describe('Blog app', () => {
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      
-      await page.getByTestId('username').fill('mluukkai')
-      await page.getByTestId('password').fill('salainen')
-      await page.getByRole('button', { name: 'Login' }).click()
+      await login(page, 'mluukkai', 'salainen')
     })
   
     test('a new blog can be added', async ({ page }) => {
-      await page.getByRole('button', { name: 'New blog' }).click()
-      await page.getByTestId('title').fill('An Awesome Blog Title')
-      await page.getByTestId('author').fill('C. Author')
-      await page.getByTestId('url').fill('www.awesomeblog.com')
-      await page.getByRole('button', { name: 'Create' }).click()
+      addNewBlog(page, 'An Awesome Blog Title', 'C. Author', 'www.awesomeblog.com')
 
       await expect(page.getByText('An Awesome Blog Title').nth(1)).toBeVisible()
 
@@ -69,11 +59,8 @@ describe('Blog app', () => {
 
     describe('When new blog is created', () => {
       beforeEach(async ({ page }) => {
-        await page.getByRole('button', { name: 'New blog' }).click()
-        await page.getByTestId('title').fill('An Awesome Blog Title')
-        await page.getByTestId('author').fill('C. Author')
-        await page.getByTestId('url').fill('www.awesomeblog.com')
-        await page.getByRole('button', { name: 'Create' }).click()
+        addNewBlog(page, 'An Awesome Blog Title', 'C. Author', 'www.awesomeblog.com')
+
       })
 
       test('Blog can be liked', async ({ page }) => {
@@ -95,8 +82,11 @@ describe('Blog app', () => {
       })
 
       test('Only the user that added a blog can see Remove button', async ({ page, request }) => {
-        await page.getByRole('button', { name: 'View' }).click()
-        await expect(page.getByRole('button', { name: 'Remove' })).toBeVisible()
+        const removeButton = page.getByRole('button', { name: 'Remove' })
+        const viewButton = page.getByRole('button', { name: 'View' })
+        
+        await viewButton.click()
+        await expect(removeButton).toBeVisible()
         await page.getByRole('button', { name: 'Logout' }).click()
 
         await request.post('http://localhost:3001/api/users', {
@@ -106,23 +96,16 @@ describe('Blog app', () => {
             password: 'password'
           }
         })
-        await page.getByTestId('username').fill('another')
-        await page.getByTestId('password').fill('password')
-        await page.getByRole('button', { name: 'Login' }).click()
 
-        await page.getByRole('button', { name: 'New blog' }).click()
-        await page.getByTestId('title').fill('Another Blog')
-        await page.getByTestId('author').fill('D. Author')
-        await page.getByTestId('url').fill('www.anotherblog.com')
-        await page.getByRole('button', { name: 'Create' }).click()
-        
-        const removeButton = page.getByRole('button', { name: 'Remove' })
+        await login(page, 'another', 'password')
 
-        await page.getByRole('button', { name: 'View' }).nth(0).click()
+        await addNewBlog (page, 'Another Blog', 'D. Author', 'www.anotherblog.com')
+
+        await viewButton.nth(0).click()
         await expect(removeButton).not.toBeVisible()
         await page.getByRole('button', { name: 'Hide' }).click()
 
-        await page.getByRole('button', { name: 'View' }).nth(1).click()
+        await viewButton.nth(1).click()
         await expect(removeButton).toBeVisible()
       })   
       })
