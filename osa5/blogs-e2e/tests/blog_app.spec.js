@@ -55,14 +55,16 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'Login' }).click()
     })
   
-    test('a new blog can be created', async ({ page }) => {
+    test.only('a new blog can be created', async ({ page }) => {
       await page.getByRole('button', { name: 'New blog' }).click()
       await page.getByTestId('title').fill('An Awesome Blog Title')
       await page.getByTestId('author').fill('C. Author')
       await page.getByTestId('url').fill('www.awesomeblog.com')
       await page.getByRole('button', { name: 'Create' }).click()
 
+
       await expect(page.getByText('An Awesome Blog Title').nth(1)).toBeVisible()
+
 
     })
 
@@ -75,12 +77,25 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'Create' }).click()
       })
 
-      test('Blog can be liked', async({ page }) => {
+      test('Blog can be liked', async ({ page }) => {
         await page.getByRole('button', { name: 'View' }).click()
         await expect(page.getByText('Likes: 0')).toBeVisible()
         await page.getByRole('button', { name: 'Like' }).click()
         await expect(page.getByText('Likes: 1')).toBeVisible()
       })
+
+      /*test.only('Blog can be deleted', async ({ page }) => {
+        await page.getByRole('button', { name: 'View' }).click()
+        await page.getByRole('button', { name: 'Remove' }).click()
+        
+    
+
+        await expect(page.getByText('An Awesome Blog Title').nth(1)).not.toBeVisible()
+        await expect(page.getByText('C. Author')).not.toBeVisible()
+        await expect(page.getByText('www.awesomeblog.com')).not.toBeVisible()
+
+
+      })*/
 
     })
 

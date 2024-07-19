@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
+import Notification from './Notification'
 
-const Blog = ({ blog, setBlogs, user }) => {
+const Blog = ({ blog, setBlogs, setNotification, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,14 +17,19 @@ const Blog = ({ blog, setBlogs, user }) => {
       likes: blog.likes + 1,
       author: blog.author })
     const updatedBlogs = await blogService.getAll()
-    setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+    setBlogs(updatedBlogs)
   }
 
   const handleDelete = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.title}`)) {
       await blogService.deleteBlog(blog.id)
       const updatedBlogs = await blogService.getAll()
-      setBlogs(updatedBlogs.filter(blog => blog.user.username === user.username))
+      setBlogs(updatedBlogs)
+      setNotification(`${blog.title} by ${blog.title} removed`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+
     }
   }
 

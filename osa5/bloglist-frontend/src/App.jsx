@@ -99,7 +99,7 @@ const App = () => {
 
       <div>
         <br/>
-        {user && <BlogList blogs={blogs} setBlogs={setBlogs} user={user}/>}
+        {user && <BlogList blogs={blogs} setBlogs={setBlogs} user={user} setNotification={setNotification}/>}
       </div>
 
     </div>
