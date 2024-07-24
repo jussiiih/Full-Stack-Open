@@ -17,8 +17,10 @@ const AnecdoteList = () => {
       dispatch(addVote(anecdoteVoted))
 
 
-      dispatch(changeNotification(`Anecdote "${anecdoteVoted.content}" voted`))
-      setTimeout(()=>{dispatch(changeNotification(''))}, 5000)
+      //dispatch(changeNotification(`Anecdote "${anecdoteVoted.content}" voted`))
+      //setTimeout(()=>{dispatch(changeNotification(''))}, 5000)
+      dispatch(changeNotification(`Anecdote "${anecdoteVoted.content}" voted`, 10))
+
     }
     return (
         [...anecdotes].sort((a,b) => b.votes - a.votes).map(anecdote =>
