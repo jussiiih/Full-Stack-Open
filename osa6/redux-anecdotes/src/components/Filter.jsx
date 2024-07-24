@@ -6,7 +6,6 @@ const Filter = () => {
     
     const handleChange = (event) => {
         const content = event.target.value
-        //event.target.filter.value = ''
         dispatch(changeFilter(content))
     }
     const style = {
