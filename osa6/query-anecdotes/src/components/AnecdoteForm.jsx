@@ -17,7 +17,10 @@ const AnecdoteForm = () => {
 
       notificationDispatch({ type: 'NEW_ANECDOTE', payload: newAnecdote.content })
       setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
-
+    },
+    onError: () => {
+      notificationDispatch({ type: 'TOO_SHORT' })
+      setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
     }
   })
 

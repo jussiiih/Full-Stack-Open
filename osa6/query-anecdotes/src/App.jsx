@@ -33,7 +33,6 @@ const App = () => {
     retry: 1,
     refetchOnWindowFocus: false
   })
-  console.log(JSON.parse(JSON.stringify(result)))
 
   if ( result.isSuccess === false) {
     return <div>anecdote server not available due to problems in server</div>
