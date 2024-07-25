@@ -9,7 +9,6 @@ const App = () => {
     console.log('vote')
   }
   
-
   const result = useQuery({
     queryKey: ['anecdotes'],
     queryFn: getAnecdotes,
