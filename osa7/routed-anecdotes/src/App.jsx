@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link, useParams
+  Routes, Route, Link, useParams, useNavigate
 } from 'react-router-dom'
 
 
@@ -64,7 +64,8 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
-
+  const navigate = useNavigate()
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
@@ -73,6 +74,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -162,9 +164,7 @@ const App = () => {
       </div>
 
     </Router>
-      
-
-    
+          
   )
 }
 
