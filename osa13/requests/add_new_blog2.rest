@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Writing Resilient Components",
+  "author": "Dan Abramov",
+  "url": "www.danabramov.com",
+  "likes": 0
+}

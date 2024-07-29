@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Is High Quality Software Worth the Cost?",
+  "author": "Martin Fowler",
+  "url": "www.martinfowler.com",
+  "likes": 10
+}
