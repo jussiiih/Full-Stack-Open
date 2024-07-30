@@ -3,6 +3,7 @@ require('express-async-errors')
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../util/config')
 const { Blog, User } = require('../models')
+const { Op } = require('sequelize')
 
 const tokenExtractor = (req, res, next) => {
     const authorization = req.get('authorization')
@@ -23,12 +24,16 @@ const tokenExtractor = (req, res, next) => {
 
 
 router.get('/api/blogs', async (req, res) => {
+    
+    const whereClause = req.query.search ? { title: { [Op.iLike]: `%${req.query.search}%` } } : {};
     const blogs = await Blog.findAll({
         attributes: { exclude: ['userId'] },
         include: {
             model: User,
             attributes: ['name']
-        }
+        },
+        where: whereClause
+        
     })
     res.json(blogs)
 })
