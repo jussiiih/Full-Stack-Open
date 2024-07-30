@@ -52,7 +52,12 @@ router.delete('/api/blogs/:id', async (req, res, next) => {
 router.put('/api/blogs/:id', async (req, res, next) => {
     try {
             const blogToBeUpdated = await Blog.findByPk(req.params.id)
-        if (blogToBeUpdated) {
+            if (!req.body.likes) {
+                const error = new Error('Likes not in request')
+                error.status = 404
+                throw error
+            }
+            if (blogToBeUpdated) {
             blogToBeUpdated.likes = req.body.likes
             await blogToBeUpdated.save()
             res.json(blogToBeUpdated)
