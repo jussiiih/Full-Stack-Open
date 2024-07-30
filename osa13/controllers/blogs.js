@@ -57,19 +57,18 @@ router.post('/api/blogs', tokenExtractor, async (req, res, next) => {
     }
 })
 
-router.delete('/api/blogs/:id', async (req, res, next) => {
+router.delete('/api/blogs/:id', tokenExtractor, async (req, res, next) => {
     try {
         const blogToBeDeleted = await Blog.findByPk(req.params.id)
-        if (blogToBeDeleted) {
-            await blogToBeDeleted.destroy()
-            res.status(204).end()    
-        }
-        else {
+        if (!blogToBeDeleted) {
             const error = new Error('Blog not found')
             error.status = 404
-            throw error
+            throw error}
+        if (blogToBeDeleted.userId !== req.decodedToken.id) {
+            return res.status(401).json({ error: 'user not authorized to delete this blog' })
         }
-        
+        await blogToBeDeleted.destroy()
+        res.status(204).end()
     }
     catch(error) {
         next(error)
