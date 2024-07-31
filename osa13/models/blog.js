@@ -24,9 +24,15 @@ Blog.init({
     year: {
         type: DataTypes.INTEGER,
         validate: {
-            min: 1991,
-            max: new Date().getFullYear()
+            min: {
+                args: [1991],
+                msg: 'Year must be at least 1991'
+            },
+            max: {
+                args: [new Date().getFullYear()],
+                msg: `Year can not be over ${new Date().getFullYear()}`
             }
+        }
         },
     likes: {
         type: DataTypes.INTEGER,
