@@ -24,7 +24,15 @@ Blog.init({
     likes: {
         type: DataTypes.INTEGER,
         defaultValue: 0  
-        }
+        },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
+    }, 
+    updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
+    }
     }, {
     sequelize,
     underscored: true,

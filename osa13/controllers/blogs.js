@@ -100,6 +100,7 @@ router.put('/api/blogs/:id', async (req, res, next) => {
             }
             if (blogToBeUpdated) {
             blogToBeUpdated.likes = req.body.likes
+            blogToBeUpdated.updated_at = new Date()
             await blogToBeUpdated.save()
             res.json(blogToBeUpdated)
         }

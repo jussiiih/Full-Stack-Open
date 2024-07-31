@@ -30,6 +30,7 @@ router.put('/api/users/:username', async (req, res) => {
     const users = await User.findAll()
     const user = users.find(user=>user.username === req.params.username)
     user.name = req.body.name
+    user.updated_at = new Date()
     user.save()
     res.json(user)
 })

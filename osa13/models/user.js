@@ -21,11 +21,19 @@ User.init({
     name: {
         type: DataTypes.TEXT,
         allowNull: false
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
+    }, 
+    updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
     }
 }, {
     sequelize,
     underscored: true,
-    timestamps: true,
+    timestamps: false,
     modelName: 'user'
 })
 
