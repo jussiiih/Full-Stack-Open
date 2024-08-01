@@ -22,7 +22,7 @@ ReadingList.init({
     },
     read: {
         type: DataTypes.BOOLEAN,
-        defaulValue: false
+        defaultValue: false
     }
 }, {
     sequelize,
