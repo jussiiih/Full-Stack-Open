@@ -1,7 +1,6 @@
 const router = require('express').Router()
 
-const { Blog } = require('../models')
-const User = require('../models/user')
+const { User, Blog, ReadingList } = require('../models')
 
 router.get('/api/users', async ( req, res) => {
     console.log(User)
@@ -13,6 +12,43 @@ router.get('/api/users', async ( req, res) => {
     })
     res.json(users)
 })
+
+router.get('/api/users/:id', async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id, {
+        attributes: ['name', 'username'],
+        include: {
+          model: ReadingList,
+          as: 'readingLists',
+          include: {
+            model: Blog,
+            attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
+          }
+        }
+      });
+  
+      if (user) {
+        const formattedResponse = {
+          name: user.name,
+          username: user.username,
+          readings: user.readingLists.map(readingList => ({
+            id: readingList.blog.id,
+            url: readingList.blog.url,
+            title: readingList.blog.title,
+            author: readingList.blog.author,
+            likes: readingList.blog.likes,
+            year: readingList.blog.year
+          }))
+        };
+        res.json(formattedResponse);
+      } else {
+        res.status(404).send({ error: 'User not found' });
+      }
+    } catch (error) {
+      next(error);
+    }
+  });
+  
 
 
 router.post('/api/users', async (req, res, next) => {
