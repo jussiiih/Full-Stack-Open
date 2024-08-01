@@ -10,6 +10,7 @@ const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const authorsrouter = require('./controllers/authors')
+const readingListsRouter = require('./controllers/readingLists')
 
 const { errorHandler } = require('./util/middleware')
 
@@ -19,6 +20,7 @@ app.use('/', blogsRouter)
 app.use('/', usersRouter)
 app.use('/', loginRouter)
 app.use('/', authorsrouter)
+app.use('/', readingListsRouter)
 
 app.use(errorHandler)
 
