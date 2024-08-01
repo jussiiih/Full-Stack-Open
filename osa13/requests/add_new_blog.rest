@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1haWphQGdtYWlsLmNvbSIsImlkIjoxLCJpYXQiOjE3MjI0MjcxMzd9.fYGW-7ZjqgMGKPM30DKrpUPctkkkKni7SrXUPN8jSDY
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1haWphQGdtYWlsLmNvbSIsImlkIjoxLCJpYXQiOjE3MjI0OTMzMDB9.Szz4NZXKcKVa_-PpqgYUiByxc1njqRnQF7uMmRnLxJ8
 
 {
-  "title": "Is High Quality Software Worth the Cost?",
+  "title": "Blog 4",
   "author": "Martin Fowler",
   "url": "www.martinfowler.com",
   "year": 2024,
