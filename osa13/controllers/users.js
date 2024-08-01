@@ -25,29 +25,47 @@ router.get('/api/users/:id', async (req, res, next) => {
             attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
           }
         }
-      });
+      })
   
       if (user) {
         const formattedResponse = {
           name: user.name,
           username: user.username,
-          readings: user.readingLists.map(readingList => ({
-            id: readingList.blog.id,
-            url: readingList.blog.url,
-            title: readingList.blog.title,
-            author: readingList.blog.author,
-            likes: readingList.blog.likes,
-            year: readingList.blog.year
-          }))
-        };
-        res.json(formattedResponse);
+          readings: []
+        }
+  
+        const readingListMap = new Map()
+  
+        user.readingLists.forEach(readingList => {
+          const blog = readingList.blog;
+          if (!readingListMap.has(blog.id)) {
+            readingListMap.set(blog.id, {
+              id: blog.id,
+              url: blog.url,
+              title: blog.title,
+              author: blog.author,
+              likes: blog.likes,
+              year: blog.year,
+              readinglists: []
+            })
+          }
+          readingListMap.get(blog.id).readinglists.push({
+            read: readingList.read,
+            id: readingList.id
+          })
+        })
+  
+        formattedResponse.readings = Array.from(readingListMap.values())
+  
+        res.json(formattedResponse)
       } else {
-        res.status(404).send({ error: 'User not found' });
+        res.status(404).send({ error: 'User not found' })
       }
     } catch (error) {
-      next(error);
+      next(error)
     }
-  });
+  })
+  
   
 
 
