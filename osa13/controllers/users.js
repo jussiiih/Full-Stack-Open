@@ -14,6 +14,8 @@ router.get('/api/users', async ( req, res) => {
 })
 
 router.get('/api/users/:id', async (req, res, next) => {
+    const whereClause = req.query.read === undefined ? {} : {read: req.query.read === "true"}
+  
     try {
       const user = await User.findByPk(req.params.id, {
         attributes: ['name', 'username'],
@@ -23,7 +25,8 @@ router.get('/api/users/:id', async (req, res, next) => {
           include: {
             model: Blog,
             attributes: ['id', 'url', 'title', 'author', 'likes', 'year'],
-          }
+          },
+          where: whereClause
         }
       })
   
