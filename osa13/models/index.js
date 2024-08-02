@@ -16,4 +16,4 @@ ReadingList.belongsTo(Blog, { foreignKey: 'blogId' })
 User.hasMany(ReadingList, { foreignKey: 'userId', as: 'readingLists' })
 Blog.hasMany(ReadingList, { foreignKey: 'blogId', as: 'blogReadings' })
 
-module.exports = { Blog, User, ReadingList }
+module.exports = { Blog, User, ReadingList, ActiveSession}

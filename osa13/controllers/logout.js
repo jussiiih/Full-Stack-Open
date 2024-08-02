@@ -3,14 +3,15 @@ const ActiveSession = require('../models/active_session')
 const { tokenExtractor } = require('../util/middleware')
 
 router.delete('/api/logout', tokenExtractor, async (req, res) => {
-    const existingSession = await ActiveSession.findOne({ where: {user_id: req.body.id} })
+    const token = req.get('authorization').substring(7);
+    const existingSession = await ActiveSession.findOne({ where: { token } });
 
     if (existingSession) {
-        await ActiveSession.destroy({ where: {user_id: req.body.id} })
-        res.status(200).send({ message: 'Logout successful' })
-    }
-    else {
-        res.status(400).send({ message: 'No active sessions'})
+        existingSession.is_active = false;
+        await existingSession.save();
+        res.status(200).send({ message: 'Logout successful' });
+    } else {
+        res.status(400).send({ message: 'No active sessions' });
     }
 })
 

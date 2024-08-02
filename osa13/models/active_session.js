@@ -15,6 +15,14 @@ ActiveSession.init({
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'users', key: 'id'}
+    },
+    token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    is_active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
     }
 },{
     sequelize,

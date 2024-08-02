@@ -8,6 +8,7 @@ router.post('/api/readinglists', async (req, res) => {
 })
 
 router.post('/api/readinglists/:id', tokenExtractor, async (req, res) => {
+    
     const readingToBeUpdated = await ReadingList.findByPk(req.params.id)
     readingToBeUpdated.read = req.body.read
     readingToBeUpdated.save()

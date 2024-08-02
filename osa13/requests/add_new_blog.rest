@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1haWphQGdtYWlsLmNvbSIsImlkIjoxLCJpYXQiOjE3MjI0OTMzMDB9.Szz4NZXKcKVa_-PpqgYUiByxc1njqRnQF7uMmRnLxJ8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1haWphQGdtYWlsLmNvbSIsImlkIjoxLCJpYXQiOjE3MjI1OTkzMDF9.QbqU3Ij6Lp22SSvC1SK2egfyWxRhQZTpvAm1H4Vcdi4
 
 {
-  "title": "Blog 4",
+  "title": "Blog 12",
   "author": "Martin Fowler",
   "url": "www.martinfowler.com",
   "year": 2024,

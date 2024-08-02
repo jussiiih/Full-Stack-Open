@@ -22,6 +22,12 @@ router.post('/api/login', async ( req, res) => {
         })
     }
 
+    if (user.disabled === true) {
+        return res.status(401).json({
+            error: 'User disabled'
+        })
+    }
+
     const userForToken = {
         username: user.username,
         id: user.id
@@ -29,14 +35,9 @@ router.post('/api/login', async ( req, res) => {
 
     const token = jwt.sign(userForToken, SECRET)
 
-    res
-    .status(200)
-    .send({ token, username: user.username, name: user.name })
-    
+    await ActiveSession.create({ user_id: user.id, token })
 
-    await ActiveSession.create({ user_id: user.id })
-    
-
+    res.status(200).send({ token, username: user.username, name: user.name })
 })
 
 module.exports = router

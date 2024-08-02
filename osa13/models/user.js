@@ -30,7 +30,7 @@ User.init({
         type: DataTypes.DATE,
         defaultValue: Date.now()
     },
-    diasbled: {
+    disabled: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
