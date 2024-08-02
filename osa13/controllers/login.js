@@ -3,6 +3,7 @@ const router = require('express').Router()
 
 const { SECRET } = require('../util/config')
 const User = require('../models/user')
+const ActiveSession = require('../models/active_session')
 
 router.post('/api/login', async ( req, res) => {
     const body = req.body
@@ -31,6 +32,11 @@ router.post('/api/login', async ( req, res) => {
     res
     .status(200)
     .send({ token, username: user.username, name: user.name })
+    
+
+    await ActiveSession.create({ user_id: user.id })
+    
+
 })
 
 module.exports = router
