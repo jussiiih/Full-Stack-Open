@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const ActiveSession = require('../models/active_session')
+const { tokenExtractor } = require('../util/middleware')
 
-router.delete('/api/logout', async (req, res) => {
+router.delete('/api/logout', tokenExtractor, async (req, res) => {
     const existingSession = await ActiveSession.findOne({ where: {user_id: req.body.id} })
 
     if (existingSession) {
