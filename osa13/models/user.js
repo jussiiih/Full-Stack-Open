@@ -29,6 +29,10 @@ User.init({
     updated_at: {
         type: DataTypes.DATE,
         defaultValue: Date.now()
+    },
+    diasbled: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     sequelize,
