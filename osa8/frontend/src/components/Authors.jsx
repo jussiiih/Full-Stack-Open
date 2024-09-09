@@ -9,6 +9,8 @@ const Authors = (props) => {
     return null
   }
   const authors = props.authors
+  const authorOptions = authors.map(author=>
+    <option key={author.name} value={author.name}>{author.name}</option>)
 
   const submit = async (event) => {
     event.preventDefault()
@@ -41,14 +43,17 @@ const Authors = (props) => {
 
       <h3>Set Birthyear</h3>
       <form onSubmit={submit}>
-        Name <input
-          type="text"
-          value={name}
-          onChange={({ target }) => setName(target.value)}/>
+      
+      
+      <select value={name} onChange={({ target }) => setName(target.value)}>
+          {authorOptions}
+      </select>
+      <br/>
         Year <input
           type="text"
           value={setBornTo}
           onChange={({ target }) => setSetBornTo(target.value)}/>
+      <br/>
         <button type='submit'>Update Author</button>
       </form>
     </div>
