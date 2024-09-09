@@ -169,8 +169,12 @@ const resolvers = {
       const author = authors.find(author => author.name == args.name)
       if (author) {
         author.born = args.setBornTo
+        return author
       }
-      return author
+      else {
+        return null
+      }
+
     }
   }
 }
