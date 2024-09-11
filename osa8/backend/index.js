@@ -232,7 +232,8 @@ const resolvers = {
       const book = new Book ({ ...args, author: author._id })
 
       try {
-        return await book.save()
+        await await book.save()
+        return Book.findById(book._id).populate('author')
       } catch (error) {
         throw new GraphQLError('Saving book failed', {
           extensions: {
