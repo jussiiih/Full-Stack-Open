@@ -15,8 +15,15 @@ const Books = (props) => {
 
   const [filter, setFilter] = useState(null)
   const [allGenres, setAllGenres] = useState(true)
+  const [filterChoosed, setFilterChoosed] = useState(null)
+  const [showFilter, setShowFilter] = useState(false)
 
-  const genreButtons = genreList.map(genre => <button key={genre} onClick={() => {setFilter(genre); setAllGenres(false);}}>{genre}</button>)
+  const genreButtons = genreList.map(genre => <button key={genre} onClick={()=> {
+    setFilter(genre);
+    setAllGenres(false);
+    setFilterChoosed(genre)
+    setShowFilter(true)
+    }}>{genre}</button>)
 
   const genresVisible = allGenres
     ?  books.map((a) => (
@@ -33,11 +40,15 @@ const Books = (props) => {
                 <td>{a.published}</td>
               </tr>))
 
+  
+  const filterInfo = showFilter
+    ? <p>in genre <strong>{filterChoosed}</strong></p>
+    : null
 
   return (
     <div>
       <h2>books</h2>
-
+      {filterInfo}
       <table>
         <tbody>
           <tr>
@@ -48,7 +59,7 @@ const Books = (props) => {
           {genresVisible}
         </tbody>
       </table>
-      {genreButtons}<button onClick={() => setAllGenres(true)}>all genres</button>
+      {genreButtons}<button onClick={() => {setAllGenres(true); setShowFilter(false)}}>all genres</button>
     </div>
   )
 }
