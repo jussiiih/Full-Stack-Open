@@ -7,7 +7,6 @@ const Recommendations = ({ show, user, books }) => {
     if (user) {
         const favoriteGenre = user.favoriteGenre
     
-
     return (
         <div>
         <h2>Recommendations</h2>
