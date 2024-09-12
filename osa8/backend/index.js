@@ -1,3 +1,6 @@
+const { WebSocketServer } = require('ws')
+const { useServer } = require('graphql-ws/lib/use/ws')
+
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { expressMiddleware } = require('@apollo/server/express4')
@@ -30,11 +33,34 @@ mongoose.connect(MONGODB_URI)
 const start = async () => {
   const app = express()
   const httpServer = http.createServer(app)
-  const server = new ApolloServer({
-    schema: makeExecutableSchema({ typeDefs, resolvers }),
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+
+  const wServer = new WebSocketServer({
+    server: httpServer,
+    path: '/'
   })
+
+  const schema = makeExecutableSchema({ typeDefs, resolvers })
+  const serverCleanup = useServer({ schema }, wServer)
+
+  
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose()
+            }
+          }
+        }
+      }
+    ]
+  })
+
   await server.start()
+  
   app.use(
     '/',
     cors(),

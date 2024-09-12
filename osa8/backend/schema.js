@@ -1,6 +1,6 @@
 const typeDefs = `
     type Author {
-      name: String!
+      name: String
       id: ID!
       born: Int
       bookCount: Int!
@@ -54,6 +54,10 @@ const typeDefs = `
         username: String!
         password: String!
       ): Token
+    }
+    
+    type Subscription {
+        bookAdded: Book!
     }
 `
 
