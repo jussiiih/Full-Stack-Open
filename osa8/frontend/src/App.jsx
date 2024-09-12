@@ -3,7 +3,7 @@ import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import LoginForm from "./components/LoginForm"
-import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
+import { gql, useQuery, useMutation, useApolloClient, useSubscription } from '@apollo/client'
 import Recommendations from "./components/Recommendations"
 
 const ALL_AUTHORS = gql`
@@ -80,6 +80,16 @@ const USER = gql`
   }
 `
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      published
+      genres
+    }
+  }
+`
+
 
 const App = () => {
   const [page, setPage] = useState("authors")
@@ -90,13 +100,22 @@ const App = () => {
   const booksQuery = useQuery(ALL_BOOKS)
   
   const userQuery = useQuery(USER)
-  //console.log(userQuery)
 
   const [addBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
   })
   const[editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query:ALL_AUTHORS }]
+  })
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      window.alert(`
+        Book added!
+        Title: ${data.data.bookAdded.title}
+        Published: ${data.data.bookAdded.published}
+        Genres: ${data.data.bookAdded.genres}`)
+    }
   })
 
   
@@ -119,8 +138,7 @@ const App = () => {
 
   const recommendationsVisible = token
     ? <button onClick={() => setPage("recommendations")}>recommendations</button>
-    : null
-    
+    : null  
 
   return (
     <div>
