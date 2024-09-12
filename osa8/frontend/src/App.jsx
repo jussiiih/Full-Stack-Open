@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Authors from "./components/Authors"
 import Books from "./components/Books"
 import NewBook from "./components/NewBook"
 import LoginForm from "./components/LoginForm"
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
+import Recommendations from "./components/Recommendations"
 
 const ALL_AUTHORS = gql`
   query {
@@ -70,6 +71,15 @@ const LOGIN = gql`
   }
 `
 
+const USER = gql`
+  query {
+    me {
+        username
+        favoriteGenre
+    }
+  }
+`
+
 
 const App = () => {
   const [page, setPage] = useState("authors")
@@ -78,6 +88,10 @@ const App = () => {
 
   const authorQuery = useQuery(ALL_AUTHORS)
   const booksQuery = useQuery(ALL_BOOKS)
+  
+  const userQuery = useQuery(USER)
+  //console.log(userQuery)
+
   const [addBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ]
   })
@@ -102,6 +116,10 @@ const App = () => {
   const addButtonVisible = token
     ? <button onClick={() => setPage("add")}>add book</button>
     : null
+
+  const recommendationsVisible = token
+    ? <button onClick={() => setPage("recommendations")}>recommendations</button>
+    : null
     
 
   return (
@@ -110,6 +128,7 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         {addButtonVisible}
+        {recommendationsVisible}
         {setLoginButton}
       </div>
 
@@ -118,6 +137,8 @@ const App = () => {
       <Books show={page === "books"} books={booksQuery.data.allBooks} />
 
       <NewBook show={page === "add"} addBook={addBook} />
+
+      <Recommendations show={page === "recommendations"} books={booksQuery.data.allBooks} user={userQuery.data.me}/>
 
       <LoginForm show={page === "login"} setToken={setToken} LOGIN={LOGIN} />
     </div>

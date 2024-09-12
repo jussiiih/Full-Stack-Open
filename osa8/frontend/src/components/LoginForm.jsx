@@ -20,13 +20,14 @@ const LoginForm = ({ setToken, LOGIN, show }) => {
         }
     }, [result.data])
 
-    const submit = async (event) => {
+    const submit = (event) => {
         event.preventDefault()
 
-        await login({ variables: { username, password } })
-
-        setUsername('')
-        setPassword('')
+        login({ variables: { username, password } })
+            .then(()=>{
+                setUsername('')
+                setPassword('')
+            })
     }
 
     return (
