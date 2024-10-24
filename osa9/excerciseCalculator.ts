@@ -1,56 +1,3 @@
-/*
-
-interface Result {
-  periodLength: number
-  trainingDays: number
-  success: boolean
-  rating: number
-  ratingDescription: string
-  target: number
-  average: number
-}
-
-const calculateExcercises = (excerciseHours: number[], targetAmount: number): Result  => {
-  const periodLength = excerciseHours.length
-  const trainingDays = excerciseHours.filter(hour => hour > 0).length
-  const averageTime = excerciseHours.reduce((newHours, currentHours) => newHours + currentHours, 0) / periodLength
-  const success = Math.min(...excerciseHours) > targetAmount
-  const target = targetAmount
-  const successDays = excerciseHours.map(hours => hours >= target).filter(day => day === true).length
-  let rating: number = 0
-  let ratingDescription: string = 'Terrible'
-  if (successDays >= 6) {
-    ratingDescription = 'Great'
-    rating = 3
-  }
-  else if (successDays >= 4) {
-    ratingDescription = 'Good'
-    rating = 2
-  }
-  else if (successDays >= 1) {
-    ratingDescription = 'Bad'
-    rating = 1
-  }
-  else if (successDays >= 0) {
-    ratingDescription = 'Terrible'
-    rating = 0
-  }
-
-
-  return {
-    periodLength: periodLength,
-    trainingDays: trainingDays,
-    success: success,
-    rating: rating,
-    ratingDescription: ratingDescription,
-    target: target,
-    average: averageTime
-  }
-}
-
-console.log(calculateExcercises([3, 0, 2, 4.5, 0, 3, 1], 2))
-*/
-
 interface Result {
   periodLength: number
   trainingDays: number
@@ -119,17 +66,79 @@ const calculateExcercises = (excerciseHours: number[], targetAmount: number): Re
     average: averageTime
   };
 
-  console.log(result);
+  if (require.main === module) {
+    console.log(result);
+  }
+  
   return result;
 };
 
-try {
-  const { days, target } = parseExcerciseArguments(process.argv);
-  calculateExcercises(days, target );
-} catch (error: unknown) {
-  let errorMessage = 'Something went wrong';
-  if (error instanceof Error) {
-      errorMessage += 'Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { days, target } = parseExcerciseArguments(process.argv);
+    calculateExcercises(days, target );
+  } catch (error: unknown) {
+    let errorMessage = 'Something went wrong';
+    if (error instanceof Error) {
+        errorMessage += 'Error: ' + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
+
+export default calculateExcercises;
+
+
+
+/*
+interface Result {
+  periodLength: number
+  trainingDays: number
+  success: boolean
+  rating: number
+  ratingDescription: string
+  target: number
+  average: number
+}
+
+const calculateExcercises = (excerciseHours: number[], targetAmount: number): Result  => {
+  const periodLength = excerciseHours.length
+  const trainingDays = excerciseHours.filter(hour => hour > 0).length
+  const averageTime = excerciseHours.reduce((newHours, currentHours) => newHours + currentHours, 0) / periodLength
+  const success = Math.min(...excerciseHours) > targetAmount
+  const target = targetAmount
+  const successDays = excerciseHours.map(hours => hours >= target).filter(day => day === true).length
+  let rating: number = 0
+  let ratingDescription: string = 'Terrible'
+  if (successDays >= 6) {
+    ratingDescription = 'Great'
+    rating = 3
+  }
+  else if (successDays >= 4) {
+    ratingDescription = 'Good'
+    rating = 2
+  }
+  else if (successDays >= 1) {
+    ratingDescription = 'Bad'
+    rating = 1
+  }
+  else if (successDays >= 0) {
+    ratingDescription = 'Terrible'
+    rating = 0
+  }
+
+
+  return {
+    periodLength: periodLength,
+    trainingDays: trainingDays,
+    success: success,
+    rating: rating,
+    ratingDescription: ratingDescription,
+    target: target,
+    average: averageTime
+  }
+}
+
+console.log(calculateExcercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+*/
+
