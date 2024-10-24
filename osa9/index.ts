@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import express from 'express';
 const app = express();
 import calculateBmi from './bmiCalculator';
@@ -15,7 +12,7 @@ app.get('/bmi', (req, res) => {
     const weight   = req.query.weight;
  if (isNaN(Number(height)) || isNaN(Number(weight)))
     {
-        throw new Error("malformatted parameters");
+        res.status(400).send("malformatted parameters");
     }
 else {
     res.send(calculateBmi(Number(height), Number(weight)));
