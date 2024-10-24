@@ -1,3 +1,5 @@
+/*
+
 interface Result {
   periodLength: number
   trainingDays: number
@@ -47,9 +49,9 @@ const calculateExcercises = (excerciseHours: number[], targetAmount: number): Re
 }
 
 console.log(calculateExcercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+*/
 
-
-/*interface Result {
+interface Result {
   periodLength: number
   trainingDays: number
   success: boolean
@@ -64,13 +66,13 @@ interface Arguments {
   target: number
 }
 
-const parseArguments = (args: string[]): Arguments => {
-  if (args.length < 8) throw new ErrorEvent('You provided less than 7 armugents')
-  if (args.length > 8) throw new ErrorEvent('You provided more than 7 armugents')
-
+const parseExcerciseArguments = (args: string[]): Arguments => {
+  if (args.length < 12) throw new Error('You provided less than 8 numbers')
+  if (args.length > 12) throw new Error('You provided more than 8 numbers')
+  args.shift()
+  args.shift()
   if (args.map(arg => Number(arg)).find(arg => isNaN(arg)) === undefined) {
-    args.shift()
-    const target = args.pop()
+    const target = args.shift()
       return {
         days: args.map(arg => Number(arg)),
         target: Number(target)
@@ -121,7 +123,7 @@ const calculateExcercises = (excerciseHours: number[], targetAmount: number)  =>
 }
 
 try {
-  const { days, target } = parseArguments(process.argv)
+  const { days, target } = parseExcerciseArguments(process.argv)
   calculateExcercises(days, target )
 } catch (error: unknown) {
   let errorMessage = 'Something went wrong'
@@ -130,4 +132,3 @@ try {
   }
   console.log(errorMessage)
 }
-*/

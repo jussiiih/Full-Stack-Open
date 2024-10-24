@@ -1,3 +1,4 @@
+/*
 const calculateBmi = (height: number, weight: number): string => {
     const bmi = weight / ((height / 100) ** 2)
     let category: string
@@ -38,15 +39,16 @@ const calculateBmi = (height: number, weight: number): string => {
 }
 
 console.log(calculateBmi(180, 74))
-/*
+*/
+
 interface BmiCalculator {
     height: number
     weight: number
 }
 
-const parseArguments = (args: string[]): BmiCalculator => {
-    if (args.length < 2) throw new ErrorEvent('You must provide height and weight')
-    if (args.length > 3) throw new ErrorEvent('You proveide too many arguments')
+const parseBmiArguments = (args: string[]): BmiCalculator => {
+    if (args.length < 4) throw new Error('You must provide height and weight')
+    if (args.length > 4) throw new Error('You proveide too many arguments')
 
     if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
         return {
@@ -98,7 +100,7 @@ const calculateBmi = (height: number, weight: number) => {
 }
 
 try {
-    const {height, weight } = parseArguments(process.argv)
+    const {height, weight } = parseBmiArguments(process.argv)
     calculateBmi(height, weight)
 } catch (error: unknown) {
     let errorMessage = 'Something went wrong'
@@ -107,4 +109,3 @@ try {
     }
     console.log(errorMessage)
 }
-    */
