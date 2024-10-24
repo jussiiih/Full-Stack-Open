@@ -1,46 +1,3 @@
-/*
-const calculateBmi = (height: number, weight: number): string => {
-    const bmi = weight / ((height / 100) ** 2)
-    let category: string
-
-    if (bmi < 16) {
-        category = 'Underweight (Severe thinness)'
-    }
-
-    else if (bmi < 17) {
-        category = 'Underweight (Moderate thinness)'
-    }
-
-    else if (bmi < 18.5) {
-        category = 'Underweight (Mild thinness)'
-    }
-    
-    else if (bmi < 25) {
-        category = 'Normal range'
-    }
-
-    else if (bmi < 30) {
-        category = 'Overweight (Pre-obese)'
-    }
-    else if (bmi < 35) {
-        category = 'Obese (Class I)'
-    }
-
-    else if (bmi < 40) {
-        category = 'Obese (Class II)'
-    }
-
-    else {
-        category = 'Obese (Class III)'
-    }
-
-    return category
-
-}
-
-console.log(calculateBmi(180, 74))
-*/
-
 interface BmiCalculator {
     height: number
     weight: number
@@ -95,17 +52,73 @@ const calculateBmi = (height: number, weight: number) => {
     else {
         category = 'Obese (Class III)'
     }
-
-    console.log(category)
-}
-
-try {
-    const {height, weight } = parseBmiArguments(process.argv)
-    calculateBmi(height, weight)
-} catch (error: unknown) {
-    let errorMessage = 'Something went wrong'
-    if (error instanceof Error) {
-        errorMessage += 'Error: ' + error.message
+    
+    if (require.main === module) {
+        console.log(category)
+        return
     }
-    console.log(errorMessage)
+    else {
+        return category
+    }
+
 }
+
+if (require.main === module) {
+    try {
+        const {height, weight } = parseBmiArguments(process.argv)
+        calculateBmi(height, weight)
+    } catch (error: unknown) {
+        let errorMessage = 'Something went wrong'
+        if (error instanceof Error) {
+            errorMessage += 'Error: ' + error.message
+        }
+        console.log(errorMessage)
+    }
+}
+
+export default calculateBmi
+
+
+/*
+const calculateBmi = (height: number, weight: number): string => {
+    const bmi = weight / ((height / 100) ** 2)
+    let category: string
+
+    if (bmi < 16) {
+        category = 'Underweight (Severe thinness)'
+    }
+
+    else if (bmi < 17) {
+        category = 'Underweight (Moderate thinness)'
+    }
+
+    else if (bmi < 18.5) {
+        category = 'Underweight (Mild thinness)'
+    }
+    
+    else if (bmi < 25) {
+        category = 'Normal range'
+    }
+
+    else if (bmi < 30) {
+        category = 'Overweight (Pre-obese)'
+    }
+    else if (bmi < 35) {
+        category = 'Obese (Class I)'
+    }
+
+    else if (bmi < 40) {
+        category = 'Obese (Class II)'
+    }
+
+    else {
+        category = 'Obese (Class III)'
+    }
+
+    return category
+
+}
+
+console.log(calculateBmi(180, 74))
+*/
+
