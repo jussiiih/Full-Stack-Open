@@ -1,16 +1,20 @@
 import { Patient, Gender } from './types';
 import { v1 as uuid } from 'uuid';
+import { z } from 'zod';
 
-const isString = (text:unknown): text is string => {
+/*const isString = (text:unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
 };
-
 
 const parseName = (name: unknown): string => {
     if (!name || !isString(name)) {
         throw new Error('Incorrect or missing name');
     }
     return name;
+};
+
+const parseName = (name: unknown): string => {
+    return z.string().parse(name);
 };
 
 const isDate = (date: string): boolean => {
@@ -52,9 +56,22 @@ const parseOccupation = (occupation: unknown): string => {
         throw new Error('Incorrect or missing occupation');
     }
     return occupation;
+};*/
+
+export const NewPatientSchema = z.object({
+    name: z.string(),
+    dateOfBirth: z.string().date(),
+    ssn: z.string(),
+    gender: z.nativeEnum(Gender),
+    occupation: z.string()
+});
+
+export const toNewPatient = (object: unknown): Patient => {
+    const parsedData = NewPatientSchema.parse(object);
+    return { ...parsedData, id: uuid() };
 };
 
-const toNewPatient = (object: unknown): Patient => {
+/*const toNewPatient = (object: unknown): Patient => {
     if (!object || typeof object !== 'object') {
         throw new Error('Incorrect or missing data');
     };
@@ -62,11 +79,11 @@ const toNewPatient = (object: unknown): Patient => {
     if ('name' in object && "dateOfBirth" in object && "ssn" in object && "gender" in object && "occupation" in object) {
         const newPatient: Patient = {
             id: uuid(),
-            name: parseName(object.name),
-            dateOfBirth: parseDateOfBirth(object.dateOfBirth),
-            ssn: parseSsn(object.ssn),
-            gender: parseGender(object.gender),
-            occupation: parseOccupation(object.occupation),
+            name: z.string().parse(object.name),
+            dateOfBirth: z.string().date().parse(object.dateOfBirth),
+            ssn: z.string().parse(object.ssn),
+            gender: z.nativeEnum(Gender).parse(object.gender),
+            occupation: z.string().parse(object.occupation),
         };
         
         return newPatient;
@@ -75,4 +92,4 @@ const toNewPatient = (object: unknown): Patient => {
     throw new Error('Incorrect data: some fields are missing');
 };
 
-export default toNewPatient;
+export default toNewPatient;*/
