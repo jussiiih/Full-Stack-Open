@@ -24,7 +24,12 @@ export interface CoursePartBackground extends CoursePartDescription {
   kind: "background"
 }
 
-export type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground;
+export interface CoursePartRequirements extends CoursePartDescription {
+  requirements: string[];
+  kind: "special"
+}
+
+export type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground | CoursePartRequirements;
 
 
 
@@ -62,6 +67,14 @@ const App = () => {
       description: "a hard part",
       kind: "basic",
     },
+    
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      kind: "special"
+    }
   ];
 
   return (

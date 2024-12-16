@@ -13,7 +13,6 @@ const Part = ( {part}: {part: CoursePart} ) => {
                         <i>{part.description}</i>
                     </p>
                 </div>
-
             );
         case "group":
             return (
@@ -40,6 +39,21 @@ const Part = ( {part}: {part: CoursePart} ) => {
                     </p>
                 </div>
                 );
+                case "special":
+                    console.log(part.requirements)
+                    return (
+                        <div>
+                            <p>
+                                <strong>{part.name} {part.exerciseCount}</strong>
+                            </p>
+                            <p>
+                                <i>{part.description}</i>
+                            </p>
+                            <p>
+                                Required Skills: {part.requirements.join(', ')}
+                            </p>
+                        </div>
+                    );
             default:
                 return <p>Unknown part type</p>;
     }
