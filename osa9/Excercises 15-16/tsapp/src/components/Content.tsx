@@ -1,10 +1,11 @@
-const Content = ({ courses }: { courses: Array< {name:string, exerciseCount: number }>}): JSX.Element => {
+import Part from "./Part";
+import { CoursePart } from "../App";
+
+const Content = ({ courses }: { courses: CoursePart[]}): JSX.Element => {
     return (
         <div>
             {courses.map((course) => (
-            <p key={course.name}>
-                {course.name} {course.exerciseCount}
-            </p>
+                <Part key={course.name} part={course}/>
             ))}
         </div>
 
