@@ -7,10 +7,23 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
-const addEntry = (newEntry: DiaryEntry) => {
-    const request = axios.post<DiaryEntry[]>(baseUrl, newEntry)
-    return request.then(response => response.data)
-}
+const addEntry = async (newEntry: DiaryEntry) => {
+    try {
+        const response = await axios.post<DiaryEntry>(baseUrl, newEntry);
+        return response.data;
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                throw new Error(error.response.data);
+            } else {
+                throw new Error("Something went wrong");
+            }
+        } else {
+            console.error(error);
+            throw new Error("Something went wrong while adding the entry.");
+        }
+    }
+};
 
 export default {
     getAll,

@@ -2,6 +2,7 @@ import DiaryEntries from "./Components/DiaryEntries"
 import Title from "./Components/Title";
 import AddNewEntry from "./Components/AddNewEntry";
 import entryService from "./Services/entries"
+import ErrorMessage from "./Components/ErrorMessage";
 import { useState, useEffect } from "react";
 
 
@@ -20,6 +21,7 @@ const App = () => {
   const [newWeather, setNewWeather] = useState('')
   const [newVisibility, setNewVisibility] = useState('')
   const [newComment, setNewComment] = useState('')
+  const [message, setMessage] = useState('')
 
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
 
@@ -30,7 +32,7 @@ const App = () => {
     })
   }, [])
 
-  const addEntry = (event: React.SyntheticEvent) => {
+  const addEntry = async (event: React.SyntheticEvent) => {
     event.preventDefault()
     const newEntry: DiaryEntry = {
       id: entries.length + 1,
@@ -40,20 +42,30 @@ const App = () => {
       comment: newComment
     }
 
-    entryService
-    .addEntry(newEntry)
-    .then(entry => {
-      setEntries(entries.concat(entry))
-      setNewDate('')
-      setNewVisibility('')
-      setNewWeather('')
-      setNewComment('')
-    })
+    try {
+        const addedEntry = await entryService.addEntry(newEntry)
+        setEntries(entries.concat(addedEntry))
+        setNewDate('')
+        setNewVisibility('')
+        setNewWeather('')
+        setNewComment('')
+      }
+    catch (error) {
+      if (error instanceof Error) {
+        setMessage(error.message.replace("Something went wrong. ", ""))
+        setTimeout(() =>  {
+        setMessage('')},
+          5000
+        )
+
+      }
+
+    }
   }
   
   return (
     <div>
-      <Title/>
+      <ErrorMessage message={message}/>
       <AddNewEntry
         addEntry = {addEntry}
         newDate={newDate}
@@ -65,6 +77,7 @@ const App = () => {
         setNewVisibility={setNewVisibility}
         setNewComment={setNewComment}
       />
+      <Title/>
       <DiaryEntries entries={entries}/>
     </div>
   );
