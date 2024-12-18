@@ -24,6 +24,16 @@ const PatientPage = (): JSX.Element => {
                 <h2>{selectedPatient.name}</h2>
                 <p>Occupation: {selectedPatient.occupation}</p>
                 <p>Gender: {selectedPatient.gender}</p>
+                <h3>Entries</h3>
+                {selectedPatient.entries.map(entry =>
+                <div key={entry.date}>
+                    <p>{entry.date} <i>{entry.description}</i></p>
+                    {entry.diagnosisCodes && (
+                        <ul>
+                            {entry.diagnosisCodes.map(code => <li style={{listStyleType: "none"}} key={code}>{code}</li>)}   
+                        </ul>
+                    )}
+                </div>)}
 
             </div>
     
