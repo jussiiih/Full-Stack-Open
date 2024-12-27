@@ -23,6 +23,6 @@ const changeNumber = (existingPerson, updatedPerson) => {
 export default {
     getAll: getAll,
     add: add,
-    remove, remove,
-    changeNumber, changeNumber
+    remove: remove,
+    changeNumber: changeNumber
 }
